@@ -1,0 +1,225 @@
+<app-header></app-header>
+<div class="profile-container">
+  
+  <aside class="sidebar">
+    <ul>
+      <li [class.active]="activeTab === 'profile'" (click)="setActiveTab('profile')">Profile</li>
+      <li [class.active]="activeTab === 'notification-history'" (click)="setActiveTab('notification-history')">Booking History</li>
+      <li [class.active]="activeTab === 'payment-history'" (click)="setActiveTab('payment-history')">Payment History</li>
+      <li [class.active]="activeTab === 'reviews'" (click)="setActiveTab('reviews')">Reviews</li>
+    </ul>
+  </aside>
+
+  <section class="profile-content">
+    <!-- Profile Tab -->
+    <div class="tab-content" [class.active]="activeTab === 'profile'">
+      <div class="profile-card">
+        <div class="profile-pic-container">
+          <div class="profile-pic">
+            <img 
+              [src]="user?.profilePhoto ? 
+                'data:image/jpeg;base64,' + user.profilePhoto : 
+                '/assets/default-profile.webp'" 
+              alt="Profile Picture" 
+              class="profile-image"
+            />
+            <label for="file-input" class="edit-profile-photo">
+              <div class="edit-overlay">
+                <i class="fas fa-camera"></i>
+                <span>Edit</span>
+              </div>
+            </label>
+            <input 
+              id="file-input" 
+              type="file" 
+              (change)="onFileSelected($event)" 
+              accept="image/jpeg,image/png,image/gif,image/webp" 
+              hidden 
+            />
+          </div>
+        </div>
+        
+        <div class="profile-info">
+          <h2>{{ user?.firstName }} {{ user?.lastName }}</h2>
+          <p class="email">
+            <i class="fas fa-envelope"></i> 
+            {{ user?.email }}
+          </p>
+          <p class="phone">
+            <i class="fas fa-phone"></i> 
+            {{ user?.contactNumber || 'Not provided' }}
+          </p>
+          <p *ngIf="user?.address" class="address">
+            <i class="fas fa-map-marker-alt"></i>
+            {{ user?.address }}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Notification History Tab -->
+    <div class="tab-content" [class.active]="activeTab === 'notification-history'">
+      <h3>Booking History</h3>
+      
+      <div class="notification-filters">
+        <div class="filter-group">
+          <label>Filter by Status:</label>
+          <select [(ngModel)]="notificationStatusFilter" (change)="applyNotificationFilters()">
+            <option value="all">All</option>
+            <option value="PENDING">Pending</option>
+            <option value="APPROVED">Approved</option>
+            <option value="REJECTED">Rejected</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>Filter by Type:</label>
+          <select [(ngModel)]="notificationTypeFilter" (change)="applyNotificationFilters()">
+            <option value="all">All</option>
+            <option value="REQUEST">Request</option>
+            <option value="ALERT">Alert</option>
+            <option value="INFO">Info</option>
+          </select>
+        </div>
+      </div>
+      
+      <div class="notifications-list" *ngIf="filteredNotifications && filteredNotifications.length > 0">
+        <div class="notification-item" *ngFor="let notification of filteredNotifications">
+          <div class="notification-header">
+            <h4>{{ notification.type }}</h4>
+            <div class="notification-status-container">
+              <span class="notification-status {{ notification.status?.toLowerCase() }}">
+                {{ notification.status || 'PENDING' | titlecase }}
+              </span>
+              <span class="read-status" [class.read]="notification.read" [class.unread]="!notification.read">
+                {{ notification.read ? 'Read' : 'Unread' }}
+              </span>
+            </div>
+          </div>
+          
+          <div class="notification-details">
+            <div class="detail-item">
+              <span class="label">Date</span>
+              <span class="value">{{ notification.createdAt | date:'MMM d, y, h:mm a' }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="label">From</span>
+              <span class="value">{{ notification.senderName || notification.senderId }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="label">Message</span>
+              <span class="value">{{ notification.message }}</span>
+            </div>
+            <div class="detail-item" *ngIf="notification.responseMessage">
+              <span class="label">Response</span>
+              <span class="value">{{ notification.responseMessage }}</span>
+            </div>
+            <div class="detail-item" *ngIf="notification.actionBy && notification.status !== 'PENDING'">
+              <span class="label">Action By</span>
+              <span class="value">{{ notification.actionBy }}</span>
+            </div>
+            <div class="detail-item" *ngIf="notification.respondedAt && notification.status !== 'PENDING'">
+              <span class="label">Response Date</span>
+              <span class="value">{{ notification.respondedAt | date:'MMM d, y, h:mm a' }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="empty-state" *ngIf="!filteredNotifications || filteredNotifications.length === 0">
+        <i class="fas fa-bell-slash"></i>
+        <h4>No Notifications Found</h4>
+        <p>You don't have any notifications yet or no notifications match your filter.</p>
+      </div>
+    </div>
+    
+    <!-- Payment History Tab -->
+    <div class="tab-content" [class.active]="activeTab === 'payment-history'">
+      <h3>Payment History</h3>
+      
+      <div class="payment-summary">
+        <div class="summary-item">
+          <span class="label">Total Paid</span>
+          <span class="value">${{ getTotalPaidAmount().toFixed(2) }}</span>
+        </div>
+        <div class="summary-item">
+          <span class="label">Total Sessions</span>
+          <span class="value">{{ getCompletedBookings().length }}</span>
+        </div>
+      </div>
+      
+      <div class="bookings-list" *ngIf="bookings && getCompletedBookings().length > 0">
+        <div class="booking-item" *ngFor="let booking of getCompletedBookings()">
+          <div class="payment-header">
+            <h4>{{ booking.stationName }}</h4>
+            <span class="payment-date">{{ booking.chargingEndTime | date:'MMM d, y' }}</span>
+          </div>
+          
+          <div class="booking-details">
+            <div class="detail-item">
+              <span class="label">Charging Duration</span>
+              <span class="value">{{ getChargingDuration(booking) }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="label">Payment Date</span>
+              <span class="value">{{ booking.chargingEndTime | date:'MMM d, y, h:mm a' }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="label">Amount</span>
+              <span class="value">${{ booking.amount.toFixed(2) }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="label">Transaction ID</span>
+              <span class="value">{{ booking.paymentTransactionId || 'N/A' }}</span>
+            </div>
+          </div>
+          
+          <div class="payment-receipt">
+            <button class="receipt-button" (click)="viewReceipt(booking)">
+              <i class="fas fa-file-invoice"></i> View Receipt
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="empty-state" *ngIf="!bookings || getCompletedBookings().length === 0">
+        <i class="fas fa-credit-card"></i>
+        <h4>No Payment Records</h4>
+        <p>You haven't made any payments yet.</p>
+      </div>
+    </div>
+    
+    <!-- Reviews Tab -->
+    <div class="tab-content" [class.active]="activeTab === 'reviews'">
+      <h3>Your Reviews</h3>
+      
+      <div class="reviews-tabs">
+        <span [class.active]="reviewsSubTab === 'your-reviews'" (click)="setReviewsSubTab('your-reviews')">Reviews You've Written</span>
+        <span [class.active]="reviewsSubTab === 'pending-reviews'" (click)="setReviewsSubTab('pending-reviews')">Pending Reviews</span>
+      </div>
+      
+      <div class="reviews-container" *ngIf="reviewsSubTab === 'your-reviews'">
+        <div class="empty-state" *ngIf="!userReviews || userReviews.length === 0">
+          <i class="fas fa-star"></i>
+          <h4>No Reviews Submitted</h4>
+          <p>You haven't submitted any reviews yet.</p>
+        </div>
+      </div>
+      
+      <div class="reviews-container" *ngIf="reviewsSubTab === 'pending-reviews'">
+        <div class="pending-reviews-list" *ngIf="getPendingReviewBookings().length > 0">
+          <div class="pending-review-item" *ngFor="let booking of getPendingReviewBookings()">
+            <h4>{{ booking.stationName }}</h4>
+            <p>Used on {{ booking.chargingEndTime | date:'MMM d, y' }}</p>
+            <button class="write-review-button" (click)="writeReview(booking)">Write Review</button>
+          </div>
+        </div>
+        
+        <div class="empty-state" *ngIf="getPendingReviewBookings().length === 0">
+          <i class="fas fa-clipboard-check"></i>
+          <h4>No Pending Reviews</h4>
+          <p>You don't have any stations to review at the moment.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

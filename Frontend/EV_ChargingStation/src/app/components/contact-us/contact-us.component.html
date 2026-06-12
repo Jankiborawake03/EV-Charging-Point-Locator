@@ -1,0 +1,42 @@
+<app-header></app-header>
+<div class="contact-container">
+    <div class="contact-card">
+      <!-- Left Side -->
+      <div class="contact-info">
+        <img src="/assets/Saly-2.png" alt="Contact Us Illustration" class="contact-image"/>
+        <div class="info-item">
+          <i class="fa fa-phone"></i> <span>+91 7990698258</span>
+        </div>
+        <div class="info-item">
+          <i class="fa fa-envelope"></i> <span>Email: {{ email }}</span>
+        </div>
+        <div class="info-item">
+          <i class="fa fa-map-marker"></i> <span>Voltway Tech, Pune, Maharashtra, India</span>
+        </div>
+      </div>
+ 
+      <!-- Right Side - Form -->
+      <div class="contact-form">
+        <h3>Get in Touch</h3>
+        <p>Have a question or remark? Let us know!</p>
+  
+        <form action="https://api.web3forms.com/submit" method="POST">
+          <input type="hidden" name="access_key" value="e37670bb-d17b-4fcf-8476-d0889a1c6b6f">
+      
+          <div class="input-group">
+            <input type="text" name="name" required placeholder="Enter your name" class="input-field" required>
+          </div>
+          <div class="input-group">
+            <input type="email" name="email" required placeholder="Enter your Email" class="input-field" required>
+          </div>
+          <div class="input-group">
+            <textarea name="message" required placeholder="Type your message here" class="input-field textarea" required></textarea>
+          </div>
+      
+          <input type="hidden" name="redirect" value="https://web3forms.com/success">
+          <button type="submit" class="submit-btn">Submit Form</button>
+      
+      </form>
+      </div>
+    </div>
+</div>

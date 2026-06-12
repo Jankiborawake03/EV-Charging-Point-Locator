@@ -1,0 +1,120 @@
+// @import '../variables';  // Assuming you have a variables file for consistent theming
+
+.news-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.5rem;
+  
+  h2 {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    color: #2c3e50;
+    text-align: center;
+    font-weight: 600;
+    
+    @media (max-width: 768px) {
+      font-size: 1.75rem;
+    }
+  }
+}
+
+.news-card {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  margin-bottom: 2rem;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  }
+  
+  img {
+    width: 100%;
+    height: 240px;
+    object-fit: cover;
+    
+    @media (max-width: 576px) {
+      height: 180px;
+    }
+  }
+  
+  h3 {
+    font-size: 1.4rem;
+    padding: 1rem 1.5rem 0.5rem;
+    margin: 0;
+    color: #1a2a3a;
+    
+    @media (max-width: 576px) {
+      font-size: 1.2rem;
+    }
+  }
+  
+  p {
+    padding: 0 1.5rem;
+    line-height: 1.6;
+    color: #4a5568;
+    margin-bottom: 1rem;
+  }
+  
+  .date {
+    display: block;
+    padding: 0 1.5rem 1.5rem;
+    color: #718096;
+    font-size: 0.9rem;
+    font-style: italic;
+  }
+}
+
+// Grid layout for desktop
+@media (min-width: 768px) {
+  .news-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 1.5rem;
+    
+    h2 {
+      grid-column: 1 / -1;
+    }
+  }
+  
+  .news-card {
+    margin-bottom: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    
+    p {
+      flex-grow: 1;
+    }
+  }
+}
+
+// Loading state
+.news-loading {
+  text-align: center;
+  padding: 2rem;
+  color: #718096;
+}
+
+// Error state
+.news-error {
+  text-align: center;
+  padding: 2rem;
+  color: #e53e3e;
+  background-color: #fff5f5;
+  border-radius: 8px;
+  margin: 1rem 0;
+}
+
+// Empty state
+.news-empty {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #718096;
+  background-color: #f7fafc;
+  border-radius: 8px;
+  margin: 1rem 0;
+}

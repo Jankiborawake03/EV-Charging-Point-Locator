@@ -1,0 +1,173 @@
+<div class="signup-page">
+  <div class="signup-container">
+    <div class="signup-card">
+      <h2>Welcome to <span class="brand-name">VoltWay</span></h2>
+      <h1>Create Your Account</h1>
+      <div *ngIf="successMessage" class="alert success">
+        {{ successMessage }}
+      </div>
+      <div *ngIf="errorMessage" class="alert error">
+        {{ errorMessage }}
+      </div>
+      <div class="role-toggle">
+        <button [class.active]="isEVOwner" (click)="setUserType('evOwner')">
+          <i class="fas fa-car"></i> EV Owner
+        </button>
+        <button [class.active]="!isEVOwner" (click)="setUserType('host')">
+          <i class="fas fa-charging-station"></i> Station Host
+        </button>
+      </div>
+      <form *ngIf="isEVOwner" [formGroup]="signupForm" (ngSubmit)="onSignup()">
+        <div class="input-group">
+          <i class="fas fa-user"></i>
+          <input type="text" placeholder="First Name*" formControlName="firstName" required />
+        </div>
+        <div class="input-group">
+          <i class="fas fa-user"></i>
+          <input type="text" placeholder="Last Name*" formControlName="lastName" required />
+        </div>
+        <div class="input-group">
+          <i class="fas fa-phone"></i>
+          <input type="text" placeholder="Contact Number*" formControlName="contactNumber" required />
+        </div>
+        <div class="input-group">
+          <i class="fas fa-envelope"></i>
+          <input type="email" placeholder="Email*" formControlName="email" required />
+        </div>
+        <div class="input-group">
+          <input [type]="showPassword ? 'text' : 'password'" placeholder="Password*" formControlName="password" required />
+          <i class="eye-icon fas fa-eye" (click)="togglePasswordVisibility()"></i>
+        </div>
+        <button type="submit" [disabled]="signupForm.invalid">Sign up</button>
+      </form>
+      <form *ngIf="!isEVOwner" [formGroup]="hostSignupForm" (ngSubmit)="onHostSignup()">
+        <div class="input-group">
+          <i class="fas fa-user"></i>
+          <input type="text" placeholder="First Name*" formControlName="firstName" required />
+        </div>
+        <div class="input-group">
+          <i class="fas fa-user"></i>
+          <input type="text" placeholder="Last Name*" formControlName="lastName" required />
+        </div>
+        <div class="input-group">
+          <i class="fas fa-phone"></i>
+          <input type="text" placeholder="Contact Number*" formControlName="contactNumber" required />
+        </div>
+        <div class="input-group">
+          <i class="fas fa-envelope"></i>
+          <input type="email" placeholder="Email*" formControlName="email" required />
+        </div>
+        <div class="input-group">
+          <input 
+            [type]="showPassword ? 'text' : 'password'" 
+            placeholder="Password*" 
+            formControlName="password" 
+            required/>
+          <i 
+            class="eye-icon fas" 
+            [class.fa-eye]="!showPassword" 
+            [class.fa-eye-slash]="showPassword"
+            (click)="togglePasswordVisibility()">
+          </i>
+        </div>
+        <button type="submit" [disabled]="hostSignupForm.invalid">Sign up</button>
+      </form>
+      <p class="signin-link">Already have an account? <a routerLink="/sign-in">Sign in</a></p>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <div class="signup-page">
+  <div class="signup-container">
+    <div class="signup-card">
+      <h2>Welcome to <span class="brand-name">VoltWay</span></h2>
+      <h1>Create Your Account</h1>
+
+    
+      <div *ngIf="successMessage" class="alert success">
+        {{ successMessage }}
+      </div>
+      <div *ngIf="errorMessage" class="alert error">
+        {{ errorMessage }}
+      </div>
+
+ 
+      <div class="role-toggle">
+        <button [class.active]="isEVOwner" (click)="setUserType('evOwner')">
+          <i class="fas fa-car"></i> EV Owner
+        </button>
+        <button [class.active]="!isEVOwner" (click)="setUserType('host')">
+          <i class="fas fa-charging-station"></i> Station Host
+        </button>
+      </div>
+
+  
+      <form *ngIf="isEVOwner" [formGroup]="signupForm" (ngSubmit)="onSignup()">
+        <div class="input-group">
+          <i class="fas fa-user"></i>
+          <input type="text" placeholder="First Name*" formControlName="firstName" required />
+        </div>
+        <div class="input-group">
+          <i class="fas fa-user"></i>
+          <input type="text" placeholder="Last Name*" formControlName="lastName" required />
+        </div>
+        <div class="input-group">
+          <i class="fas fa-phone"></i>
+          <input type="text" placeholder="Contact Number*" formControlName="contactNumber" required />
+        </div>
+        <div class="input-group">
+          <i class="fas fa-envelope"></i>
+          <input type="email" placeholder="Email*" formControlName="email" required />
+        </div>
+        <div class="input-group">
+          <input [type]="showPassword ? 'text' : 'password'" placeholder="Password*" formControlName="password" required />
+          <i class="eye-icon fas fa-eye" (click)="togglePasswordVisibility()"></i>
+        </div>
+        <button type="submit" [disabled]="signupForm.invalid">Sign up</button>
+      </form>
+
+    
+      <form *ngIf="!isEVOwner" [formGroup]="hostSignupForm" (ngSubmit)="onHostSignup()">
+        <div class="input-group">
+          <i class="fas fa-user"></i>
+          <input type="text" placeholder="First Name*" formControlName="firstName" required />
+        </div>
+        <div class="input-group">
+          <i class="fas fa-user"></i>
+          <input type="text" placeholder="Last Name*" formControlName="lastName" required />
+        </div>
+        <div class="input-group">
+          <i class="fas fa-phone"></i>
+          <input type="text" placeholder="Contact Number*" formControlName="contactNumber" required />
+        </div>
+        <div class="input-group">
+          <i class="fas fa-envelope"></i>
+          <input type="email" placeholder="Email*" formControlName="email" required />
+        </div>
+        <div class="input-group">
+          <input [type]="showPassword ? 'text' : 'password'" placeholder="Password*" formControlName="password" required />
+          <i class="eye-icon fas fa-eye" (click)="togglePasswordVisibility()"></i>
+        </div>
+        <button type="submit" [disabled]="hostSignupForm.invalid">Sign up</button>
+      </form>
+
+      <p class="signin-link">Already have an account? <a routerLink="/sign-in">Sign in</a></p>
+    </div>
+  </div>
+</div> -->

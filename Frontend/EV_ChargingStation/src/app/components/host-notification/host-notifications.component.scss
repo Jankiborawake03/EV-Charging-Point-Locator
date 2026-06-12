@@ -1,0 +1,483 @@
+// Variables
+$primary-color: #3a86ff;
+$secondary-color: #8338ec;
+$success-color: #38b000;
+$warning-color: #ff9500;
+$danger-color: #ff3b30;
+$light-gray: #f8f9fa;
+$medium-gray: #e9ecef;
+$dark-gray: #6c757d;
+$border-radius: 8px;
+$box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+$transition-speed: 0.3s;
+
+// Breakpoints
+$breakpoint-sm: 576px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 992px;
+$breakpoint-xl: 1200px;
+
+// Mixins
+@mixin flex($direction: row, $justify: flex-start, $align: stretch, $wrap: nowrap) {
+  display: flex;
+  flex-direction: $direction;
+  justify-content: $justify;
+  align-items: $align;
+  flex-wrap: $wrap;
+}
+
+@mixin responsive($breakpoint) {
+  @if $breakpoint == sm {
+    @media (min-width: $breakpoint-sm) { @content; }
+  } @else if $breakpoint == md {
+    @media (min-width: $breakpoint-md) { @content; }
+  } @else if $breakpoint == lg {
+    @media (min-width: $breakpoint-lg) { @content; }
+  } @else if $breakpoint == xl {
+    @media (min-width: $breakpoint-xl) { @content; }
+  }
+}
+
+// Base styles
+.notifications-page {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  color: #333;
+  padding: 16px;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  @include responsive(md) {
+    padding: 24px;
+  }
+}
+
+// Header section
+.header-section {
+  @include flex(column, space-between, center);
+  margin-bottom: 24px;
+  
+  @include responsive(md) {
+    @include flex(row, space-between, center);
+  }
+  
+  h1 {
+    margin: 0 0 16px 0;
+    font-size: 1.75rem;
+    text-align: center;
+    
+    @include responsive(md) {
+      margin: 0;
+      text-align: left;
+      font-size: 2rem;
+    }
+  }
+  
+  .actions {
+    @include flex(row, center, center, wrap);
+    gap: 12px;
+    
+    @include responsive(md) {
+      gap: 16px;
+    }
+    
+    .btn {
+      margin: 0;
+    }
+  }
+}
+
+// Filter section
+.filter-section {
+  @include flex(column, flex-start, flex-start);
+  margin-bottom: 24px;
+  
+  @include responsive(md) {
+    @include flex(row, flex-start, center);
+  }
+  
+  .filter-label {
+    font-weight: 600;
+    margin-bottom: 8px;
+    
+    @include responsive(md) {
+      margin-bottom: 0;
+      margin-right: 16px;
+    }
+  }
+  
+  .filter-buttons {
+    @include flex(row, flex-start, center, wrap);
+    gap: 8px;
+    
+    button {
+      padding: 6px 12px;
+      background-color: $medium-gray;
+      border: none;
+      border-radius: $border-radius;
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: all $transition-speed ease;
+      
+      &:hover {
+        background-color: darken($medium-gray, 5%);
+      }
+      
+      &.active {
+        background-color: $primary-color;
+        color: white;
+        
+        &:hover {
+          background-color: darken($primary-color, 10%);
+        }
+      }
+    }
+  }
+}
+
+// Notifications container
+.notifications-container {
+  @include flex(column, flex-start, stretch);
+  gap: 16px;
+}
+
+// Notification cards
+.notification-card {
+  background-color: white;
+  border-radius: $border-radius;
+  box-shadow: $box-shadow;
+  overflow: hidden;
+  transition: transform $transition-speed ease, box-shadow $transition-speed ease;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  }
+  
+  &.unread {
+    border-left: 4px solid $primary-color;
+  }
+}
+
+// Notification header
+.notification-header {
+  @include flex(row, space-between, center);
+  padding: 12px 16px;
+  background-color: $light-gray;
+  
+  .notification-status {
+    @include flex(row, flex-start, center);
+    padding: 4px 8px;
+    border-radius: 16px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: white;
+    
+    .status-icon {
+      margin-right: 4px;
+    }
+  }
+  
+  .notification-time {
+    font-size: 0.75rem;
+    color: $dark-gray;
+  }
+}
+
+// Notification body
+.notification-body {
+  padding: 16px;
+  
+  .notification-message {
+    font-size: 1rem;
+    margin-bottom: 12px;
+    line-height: 1.5;
+  }
+  
+  .notification-sender {
+    @include flex(row, flex-start, center, wrap);
+    margin-bottom: 12px;
+    font-size: 0.875rem;
+    
+    .label {
+      font-weight: 600;
+      margin-right: 4px;
+    }
+  }
+  
+  .notification-response {
+    background-color: $light-gray;
+    padding: 12px;
+    border-radius: $border-radius;
+    margin-top: 12px;
+    
+    .response-label {
+      font-weight: 600;
+      margin-bottom: 4px;
+      font-size: 0.875rem;
+    }
+    
+    .response-message {
+      font-size: 0.875rem;
+      margin-bottom: 8px;
+      line-height: 1.4;
+    }
+    
+    .response-by, .response-time {
+      font-size: 0.75rem;
+      color: $dark-gray;
+    }
+  }
+}
+
+// Notification actions
+.notification-actions {
+  @include flex(row, flex-end, center);
+  padding: 12px 16px;
+  gap: 12px;
+  border-top: 1px solid $medium-gray;
+}
+
+// Buttons
+.btn {
+  @include flex(row, center, center);
+  padding: 8px 16px;
+  border-radius: $border-radius;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all $transition-speed ease;
+  
+  .icon {
+    margin-right: 8px;
+  }
+  
+  &.refresh {
+    background-color: $light-gray;
+    color: $dark-gray;
+    
+    &:hover {
+      background-color: darken($light-gray, 5%);
+    }
+    
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+  
+  &.mark-read {
+    background-color: $light-gray;
+    color: $dark-gray;
+    
+    &:hover {
+      background-color: darken($light-gray, 5%);
+    }
+    
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+  
+  &.approve {
+    background-color: $success-color;
+    color: white;
+    
+    &:hover {
+      background-color: darken($success-color, 10%);
+    }
+  }
+  
+  &.reject {
+    background-color: $danger-color;
+    color: white;
+    
+    &:hover {
+      background-color: darken($danger-color, 10%);
+    }
+  }
+  
+  &.cancel {
+    background-color: $light-gray;
+    color: $dark-gray;
+    
+    &:hover {
+      background-color: darken($light-gray, 5%);
+    }
+  }
+}
+
+// Error message
+.error-message {
+  padding: 12px 16px;
+  background-color: rgba($danger-color, 0.1);
+  border-left: 4px solid $danger-color;
+  color: darken($danger-color, 20%);
+  border-radius: $border-radius;
+  margin-bottom: 24px;
+}
+
+// Loading spinner
+.loading-spinner {
+  @include flex(column, center, center);
+  padding: 32px 0;
+  
+  .spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid rgba($primary-color, 0.3);
+    border-radius: 50%;
+    border-top-color: $primary-color;
+    animation: spin 1s ease-in-out infinite;
+    margin-bottom: 16px;
+  }
+  
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
+  p {
+    color: $dark-gray;
+    font-size: 0.875rem;
+  }
+}
+
+// Empty state
+.empty-state {
+  @include flex(column, center, center);
+  padding: 48px 16px;
+  text-align: center;
+  
+  .empty-icon {
+    font-size: 3rem;
+    margin-bottom: 16px;
+    color: $dark-gray;
+  }
+  
+  h3 {
+    margin: 0 0 8px 0;
+    font-size: 1.25rem;
+  }
+  
+  p {
+    color: $dark-gray;
+    margin: 0;
+    font-size: 0.875rem;
+  }
+}
+
+// Modal overlay
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  @include flex(row, center, center);
+  z-index: 1000;
+  padding: 16px;
+}
+
+// Modal content
+.modal-content {
+  background-color: white;
+  border-radius: $border-radius;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+  
+  .modal-header {
+    @include flex(row, space-between, center);
+    padding: 16px;
+    border-bottom: 1px solid $medium-gray;
+    
+    h3 {
+      margin: 0;
+      font-size: 1.25rem;
+    }
+    
+    .close-button {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: 0;
+      color: $dark-gray;
+      
+      &:hover {
+        color: black;
+      }
+    }
+  }
+  
+  .modal-body {
+    padding: 16px;
+    
+    .notification-details {
+      margin-bottom: 16px;
+      
+      p {
+        margin: 0 0 8px 0;
+        font-size: 0.875rem;
+        
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+    
+    .response-form {
+      label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        font-size: 0.875rem;
+      }
+      
+      textarea {
+        width: 100%;
+        padding: 12px;
+        border-radius: $border-radius;
+        border: 1px solid $medium-gray;
+        resize: vertical;
+        font-family: inherit;
+        font-size: 0.875rem;
+        
+        &:focus {
+          outline: none;
+          border-color: $primary-color;
+          box-shadow: 0 0 0 2px rgba($primary-color, 0.2);
+        }
+      }
+    }
+  }
+  
+  .modal-footer {
+    @include flex(row, flex-end, center);
+    padding: 16px;
+    border-top: 1px solid $medium-gray;
+    gap: 12px;
+  }
+}
+
+// Responsive adjustments
+@media (max-width: $breakpoint-sm) {
+  .notification-header {
+    flex-direction: column;
+    align-items: flex-start;
+    
+    .notification-time {
+      margin-top: 8px;
+    }
+  }
+  
+  .notification-actions {
+    justify-content: center;
+  }
+}

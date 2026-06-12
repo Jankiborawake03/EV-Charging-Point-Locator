@@ -1,0 +1,120 @@
+<app-header></app-header>
+<div class="about-us-container">
+  <!-- Hero Section -->
+  <section class="hero-section" [@fadeIn]>
+    <div class="hero-content">
+      <h1>Powering the Future, Together</h1>
+      <p class="subtitle">Building India's largest community-driven EV charging network</p>
+    </div>
+    <div class="hero-image">
+      <img src="/assets/About-us4.jpg" alt="EV Charging Network" />
+    </div>
+  </section>
+
+  <!-- Mission Section -->
+  <section class="mission-section" [@fadeIn]>
+    <div class="container">
+      <h2>Our Mission</h2>
+      <div class="mission-content">
+        <div class="mission-text" [@slideIn]>
+          <p>To revolutionize EV charging infrastructure by empowering homeowners to share their charging points, creating a sustainable and accessible network for all electric vehicle users.</p>
+          <p>We believe in a future where finding a charging station is as easy as finding a café – with the added benefit of supporting local communities.</p>
+        </div>
+        <div class="mission-image">
+          <img src="/assets/About-us3.jpg" alt="EV Charging Mission" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works Section -->
+  <section class="how-it-works" [@fadeIn]>
+    <div class="container">
+      <h2>How It Works</h2>
+      <div class="steps-container">
+        <div class="step" [@slideIn]>
+          <div class="step-icon">
+            <i class="fas fa-home"></i>
+          </div>
+          <h3>Register Your Charging Point</h3>
+          <p>Homeowners can register their charging stations on our platform and set availability hours.</p>
+        </div>
+        <div class="step" [@slideIn]>
+          <div class="step-icon">
+            <i class="fas fa-search"></i>
+          </div>
+          <h3>Find Local Charging</h3>
+          <p>EV users can discover conveniently located charging points in their vicinity.</p>
+        </div>
+        <div class="step" [@slideIn]>
+          <div class="step-icon">
+            <i class="fas fa-bolt"></i>
+          </div>
+          <h3>Charge & Pay</h3>
+          <p>Users pay a fair rate directly to the hosts, creating a win-win situation for all.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Metrics Section -->
+  <section class="metrics-section" [@fadeIn]>
+    <div class="container">
+      <div class="metrics-grid">
+        <div class="metric" *ngFor="let stat of stats" [@slideIn]>
+          <div class="metric-value">{{stat.value}}</div>
+          <div class="metric-label">{{stat.label}}</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Founders Section -->
+  <section class="founders-section" [@fadeIn]>
+    <div class="container">
+      <h2>Meet Our Founders</h2>
+      <div class="founders-grid">
+        <div class="founder-card" *ngFor="let founder of foundersList" [@slideIn]>
+          <div class="founder-image">
+            <img [src]="founder.image" [alt]="founder.name" />
+          </div>
+          <div class="founder-info">
+            <h3>{{founder.name}}</h3>
+            <p class="position">{{founder.position}}</p>
+            <p class="bio">{{founder.bio}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Journey Section -->
+  <section class="journey-section" [@fadeIn]>
+    <div class="container">
+      <h2>Our Journey</h2>
+      <div class="timeline">
+        <div class="timeline-item" *ngFor="let milestone of milestones" [@slideIn]>
+          <div class="timeline-year">{{milestone.year}}</div>
+          <div class="timeline-content">
+            <h3>{{milestone.title}}</h3>
+            <p>{{milestone.description}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  
+  <section class="join-us-section" [@fadeIn]>
+    <div class="container">
+      <div class="join-content">
+        <h2>Be Part of the Revolution</h2>
+        <p>Whether you're looking to share your charging point or find convenient charging locations, join our community today.</p>
+        <div class="cta-buttons">
+          <button class="primary-btn">Register Your Charging Point</button>
+          <button class="secondary-btn">Find Charging Stations</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

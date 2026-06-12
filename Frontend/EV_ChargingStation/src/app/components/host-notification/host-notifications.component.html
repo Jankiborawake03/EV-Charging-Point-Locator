@@ -1,0 +1,146 @@
+<div class="notifications-page">
+  <div class="header-section">
+    <h1>Notifications Center</h1>
+    <div class="actions">
+      <button class="btn refresh" (click)="fetchNotifications()"
+        [disabled]="loading">
+        <span class="icon">🔄</span>
+        <span class="label">Refresh</span>
+      </button>
+      <button class="btn mark-read" (click)="markAllAsRead()"
+        [disabled]="loading">
+        <span class="icon">✓</span>
+        <span class="label">Mark All as Read</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="filter-section">
+    <div class="filter-label">Filter by status:</div>
+    <div class="filter-buttons">
+      <button [class.active]="statusFilter === 'ALL'"
+        (click)="changeStatusFilter('ALL')">All</button>
+      <button [class.active]="statusFilter === 'PENDING'"
+        (click)="changeStatusFilter('PENDING')">Pending</button>
+      <button [class.active]="statusFilter === 'APPROVED'"
+        (click)="changeStatusFilter('APPROVED')">Approved</button>
+      <button [class.active]="statusFilter === 'REJECTED'"
+        (click)="changeStatusFilter('REJECTED')">Rejected</button>
+    </div>
+  </div>
+
+  <div *ngIf="error" class="error-message">
+    {{ error }}
+  </div>
+
+  <div *ngIf="loading" class="loading-spinner">
+    <div class="spinner"></div>
+    <p>Loading notifications...</p>
+  </div>
+
+  <div *ngIf="!loading && filteredNotifications.length === 0"
+    class="empty-state">
+    <div class="empty-icon">📭</div>
+    <h3>No notifications</h3>
+    <p>You don't have any {{ statusFilter !== 'ALL' ? statusFilter.toLowerCase()
+      : '' }} notifications at the moment.</p>
+  </div>
+
+  <div class="notifications-container"
+    *ngIf="!loading && filteredNotifications.length > 0">
+    <div class="notification-card"
+      *ngFor="let notification of filteredNotifications"
+      [class.unread]="!notification.read">
+      <div class="notification-header">
+        <div class="notification-status"
+          [style.background-color]="getStatusColor(notification.status)">
+          <span class="status-icon">{{ getStatusIcon(notification.status)
+            }}</span>
+          <span class="status-text">{{ notification.status }}</span>
+        </div>
+        <div class="notification-time">
+          {{ formatDate(notification.createdAt) }}
+        </div>
+      </div>
+
+      <div class="notification-body">
+        <div class="notification-message">{{ notification.message }}</div>
+        <div class="notification-sender">
+          <span class="label">From:</span>
+          <span class="value">{{ notification.senderName || notification.email
+            || notification.senderEmail || 'Unknown' }}</span>
+        </div>
+
+        <div *ngIf="notification.responseMessage" class="notification-response">
+          <div class="response-label">Response:</div>
+          <div class="response-message">{{ notification.responseMessage }}</div>
+          <div *ngIf="notification.actionBy" class="response-by">
+            By: {{ notification.actionBy }}
+          </div>
+          <div *ngIf="notification.respondedAt" class="response-time">
+            At: {{ formatDate(notification.respondedAt) }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Fixed the action buttons to ensure they're always visible for PENDING notifications -->
+      <div class="notification-actions"
+        *ngIf="checkStatusIsPending(notification.status)">
+        <button class="btn approve"
+          (click)="openResponseDialog(notification, 'APPROVED')">
+          <span class="icon">✓</span>
+          <span class="label">Approve</span>
+        </button>
+        <button class="btn reject"
+          (click)="openResponseDialog(notification, 'REJECTED')">
+          <span class="icon">✗</span>
+          <span class="label">Reject</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Response Dialog -->
+  <div class="modal-overlay" *ngIf="showResponseDialog"
+    (click)="closeResponseDialog()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Respond to Notification</h3>
+        <button class="close-button" (click)="closeResponseDialog()">×</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="notification-details" *ngIf="selectedNotification">
+          <p><strong>Message:</strong> {{ selectedNotification.message }}</p>
+          <p><strong>From:</strong> {{ selectedNotification.senderName ||
+            selectedNotification.email || selectedNotification.senderEmail ||
+            'Unknown' }}</p>
+          <p><strong>Action:</strong> {{ responseAction.toUpperCase() ===
+            'APPROVED' ? 'Approved' : 'Rejected' }}</p>
+        </div>
+
+        <div class="response-form">
+          <label for="responseMessage">Response Message:</label>
+          <textarea
+            id="responseMessage"
+            rows="4"
+            [(ngModel)]="customResponse"
+            placeholder="Add a custom response message (optional)"></textarea>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn cancel"
+          (click)="closeResponseDialog()">Cancel</button>
+        <button
+          class="btn"
+          [ngClass]="responseAction === 'APPROVED' ? 'approve' : 'reject'"
+          *ngIf="(selectedNotification?.status | uppercase) === 'PENDING'"
+          (click)="respond(selectedNotification!.id, responseAction)">
+          {{ responseAction.toUpperCase() === 'APPROVED' ? 'Approve' : 'Reject'
+          }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,30 @@
+<div class="signin-page">
+    <div class="signin-container">
+      <div class="signin-card">
+        <h2>Welcome Back to <span class="brand-name">VoltWay</span></h2>
+        <h1>Admin Sign In</h1>
+        
+        <div *ngIf="successMessage" class="alert success">
+          {{ successMessage }}
+        </div>
+        <div *ngIf="errorMessage" class="alert error">
+          {{ errorMessage }}
+        </div>
+        
+        <form [formGroup]="signInForm" (ngSubmit)="onSubmit()">
+          <div class="input-group">
+            <i class="fas fa-envelope"></i>
+            <input type="email" placeholder="Email*" formControlName="email" required />
+          </div>
+          <div class="input-group">
+            <input [type]="showPassword ? 'text' : 'password'" placeholder="Password*" formControlName="password" required />
+            <i class="eye-icon fas fa-eye" (click)="togglePasswordVisibility()"></i>
+          </div>
+          <a (click)="goToForgotPassword()" class="forgot-password">Forgot Password?</a>
+          <button type="submit" [disabled]="signInForm.invalid">Sign In</button>
+        </form>
+        
+        <p class="signup-link">Don't have an account? <a routerLink="/admin-sign-up">Sign up</a></p>
+      </div>
+    </div>
+  </div>

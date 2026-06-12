@@ -1,0 +1,12 @@
+<app-header></app-header>
+<div class="news-container">
+    <h2>🔋 EV News & Updates</h2>
+    
+    <div *ngFor="let news of newsList" class="news-card">
+      <img *ngIf="news.imageUrl" [src]="news.imageUrl" alt="News Image">
+      <h3>{{ news.title }}</h3>
+      <p>{{ news.content }}</p>
+      <span class="date">{{ news.datePublished | date: 'medium' }}</span>
+    </div>
+  </div>
+  

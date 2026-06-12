@@ -1,0 +1,33 @@
+
+<app-header></app-header>
+<div class="home-container">
+  <!-- Section 1 -->
+  <section class="section-1">
+    <h1>Locate EV charging stations near you with ease</h1>
+    <p>Easy Access to Electric Vehicle Charging Points Near You</p>
+    <button (click)="scrollToSection()">Get Started</button>
+  </section>
+
+  <!-- Section 2 -->
+  <section class="section-2" id="section-2">
+    <div class="stats-box">
+        <p>Over</p>
+        <h2>60,000+</h2>
+        <p>EV Charging Point Registered</p>
+    </div>
+
+    <div class="buttons-container">
+        <button [routerLink]="['/find-charging-station']" class="find-btn">
+            Find A Charging Point Nearby
+        </button>
+        <button routerLink="/ev-news" class="register-btn">
+            EV News & Updates
+        </button>
+    </div>
+</section>
+
+
+  <!-- Why VoltWay Section -->
+  <app-why-voltway></app-why-voltway>
+</div>
+<app-footer></app-footer>

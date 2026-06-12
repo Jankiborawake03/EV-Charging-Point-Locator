@@ -1,0 +1,107 @@
+<div class="container">
+  <div class="left-panel">
+    <h2>Find a Charging Point Nearby</h2>
+    
+    <div *ngIf="locationError" class="location-error">
+      <p><i class="location-error-icon">⚠️</i> {{ locationErrorMessage }}</p>
+      <button (click)="getUserLocation()">Try Again</button>
+    </div>
+    
+    <div class="filter-options">
+      <label for="radius">Radius:</label>
+      <select id="radius" [(ngModel)]="selectedRadius">
+        <option *ngFor="let r of radiusOptions" [value]="r">{{ r }} KM</option>
+      </select>
+      <button (click)="findStations()" [disabled]="isLoading || !userLocation">Find Stations</button>
+    </div>
+
+    <h3>Nearby Charging Stations ({{ selectedRadius }}KM)</h3>
+    <div *ngIf="isLoading" class="loading-indicator">
+      <div class="spinner"></div>
+      <p>Loading stations...</p>
+    </div>
+    
+    <div *ngIf="!isLoading && !locationError && displayedStations.length === 0" class="no-results">
+      <p>No active charging stations found in this area.</p>
+      <p>Try increasing the search radius or checking a different location.</p>
+    </div>
+    
+    <ul class="station-list" *ngIf="!isLoading && displayedStations.length > 0">
+      <li *ngFor="let station of displayedStations" (click)="onStationSelect(station)">
+        <div class="station" [class.selected]="selectedStation && selectedStation.id === station.id">
+          <img *ngIf="station.photoUrl; else defaultImage" [src]="station.photoUrl" alt="Station Photo" class="station-photo" />
+          <ng-template #defaultImage>
+            <img src="/assets/default-station.webp" alt="Default Station Photo" class="station-photo" />
+          </ng-template>
+          <strong>{{ station.stationName || 'Unknown Station' }}</strong>
+          <p>{{ station.address || 'No Address Available' }}</p>
+          <span *ngIf="station.distance !== undefined">{{ station.distance.toFixed(2) }} KM</span>
+          <span class="station-status" [class.active]="station.active" [class.inactive]="!station.active">
+            {{ station.active ? 'Available' : 'Unavailable' }}
+          </span>
+        </div>
+      </li>
+    </ul>
+
+    <button *ngIf="!showMore && chargingStations.length > maxVisibleStations" (click)="expandList()" class="show-more-btn">
+      Show More
+    </button>
+  </div>
+
+  <div class="right-panel">
+    <div id="map"></div>
+    <div *ngIf="isLoading && !userLocation" class="map-loading-overlay">
+      <div class="spinner"></div>
+      <p>Getting your location...</p>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="showModalBackdrop || showPayment" class="modal-backdrop"></div>
+
+<div *ngIf="selectedStation && showModalBackdrop && !showPayment" class="confirmation-modal">
+  <p>Confirm booking for {{ selectedStation.stationName || 'selected station' }}?</p>
+  <p class="station-details">
+    <strong>Address:</strong> {{ selectedStation.address || 'No address available' }}<br>
+    <strong>Distance:</strong> {{ selectedStation.distance?.toFixed(2) }} KM
+    
+  <div class="modal-actions">
+    <button (click)="confirmBooking()" [disabled]="isLoading">
+      <span *ngIf="isLoading" class="spinner-small"></span>
+      Confirm
+    </button>
+    <button (click)="cancelSelection()">Cancel</button>
+  </div>
+</div>
+
+<div *ngIf="showPendingMessage" class="waiting-approval-modal">
+  <div class="spinner-large"></div>
+  <h3>Waiting for Host Approval...</h3>
+  <p>Your booking request has been sent to the host.</p>
+  <p class="info-message">
+  <i class="info-icon">⏳</i> Host has {{ hostCountdown }} seconds left to respond.
+</p>
+</div>
+
+
+
+<div *ngIf="showPayment" class="payment-modal">
+  <h3>Payment Required</h3>
+  <p>Please complete payment to book your charging session at {{ selectedStation?.stationName }}</p>
+
+  <div *ngIf="hostResponseMessage" class="host-response">
+    <p><i class="info-icon">✓</i> <strong>Host response:</strong> {{ hostResponseMessage }}</p>
+  </div>
+
+  <div class="price-info">
+    <span class="price-label">Amount:</span>
+    <span class="price-amount">₹{{ selectedStation?.fee || 150 }}</span>
+  </div>
+  <p class="info-message">
+    <i class="info-icon">ℹ️</i> Host will receive your booking request after payment.
+  </p>
+  <button (click)="processPayment()" [disabled]="isLoading">
+    <span *ngIf="isLoading" class="spinner-small"></span>
+    Pay Now
+  </button>
+</div>

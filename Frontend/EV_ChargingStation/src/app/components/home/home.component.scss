@@ -1,0 +1,146 @@
+$body-font: 'Josefin Sans',sans-serif;
+$heading-font: 'Josefin Sans',sans-serif;
+.home-container {
+  text-align: center;
+
+  section {
+    padding: 50px 20px;
+    background-size: cover;
+    background-position: center;
+    color: white; 
+  }
+
+  .section-1 {
+    background-image: url('/assets/home1.webp');
+    height: 86vh;
+    margin-left: 2%;
+    margin-right: 2%;
+    border-radius: 30px;
+    margin-bottom: 30px;
+
+    h1 {
+      font-family: $body-font;
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      color: #000000;
+      margin-top: 80px;
+      margin-right:800px ;
+    }
+    p {
+      font-family: $body-font;
+      font-size: 1.2rem;
+      margin-bottom: 30px;
+      color: #000000;
+      margin-top: 6px;
+      margin-right:800px ;
+    }
+    button {
+      padding: 10px 40px;
+      font-size: 1rem;
+      font-family: $body-font;
+      background-color: #1c8220;
+      color: rgb(0, 0, 0);
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-top:10px;
+      margin-right:800px ;
+    }
+  }
+
+  .section-2 {
+    background-image: url('/assets/home2.jpg'); 
+    background-size: cover;
+    background-position: center;
+    height: 86vh;
+    margin: 2%;
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 40px;
+    // position: relative;
+    color: white;
+    font-family: $body-font;
+    .stats-box {
+        background: linear-gradient(135deg, #2DC897, #16A085);
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2);
+        text-align: center;
+        max-width: 250px;
+        margin-left: 100px;
+        p {
+            font-family: $body-font;
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+
+        h2 {
+            font-family: $body-font;
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+    }
+
+    .buttons-container {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        right: 10%;
+        top: 50%;
+        transform: translateY(-50%);
+
+        button {
+            padding: 20px 30px;
+            font-family: $body-font;
+            font-size: 1rem;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+            border: none;
+            margin-right: 80px;
+            
+        }
+
+        .find-btn {
+            background: #B5F6EE;
+            color: black;
+        }
+
+        .register-btn {
+            background: linear-gradient(135deg, #2DC897, #16A085);
+            color: white;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+        }
+    }
+}
+}
+
+
+@media (max-width: 768px) {
+  .home-container {
+    .section-1 {
+      h1 {
+        font-size: 2rem;
+      }
+      p {
+        font-size: 1rem;
+      }
+    }
+    .section-2 {
+      h2 {
+        font-size: 1.5rem;
+      }
+      button {
+        width: 100%;
+        margin: 5px 0;
+      }
+    }
+  }
+}

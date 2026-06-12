@@ -1,0 +1,268 @@
+// .signin-page {
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+//   height: 100vh;
+//   background: linear-gradient(135deg, #0a0f1a, #1a2536);
+// }
+
+// .signin-container {
+//   width: 100%;
+//   max-width: 400px;
+//   background: #222e42;
+//   padding: 30px;
+//   border-radius: 15px;
+//   box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.3);
+//   text-align: center;
+// }
+
+// .signin-card h2 {
+//   color: #00d4ff;
+//   font-size: 1.8rem;
+//   margin-bottom: 10px;
+// }
+
+// .signin-card h1 {
+//   color: #fff;
+//   font-size: 2rem;
+//   margin-bottom: 20px;
+// }
+
+// .role-toggle {
+//   display: flex;
+//   justify-content: space-between;
+//   margin-bottom: 20px;
+
+//   button {
+//     flex: 1;
+//     padding: 10px;
+//     font-size: 1rem;
+//     cursor: pointer;
+//     border: none;
+//     background: #2a3a4d;
+//     color: #fff;
+//     margin: 0 5px;
+//     border-radius: 5px;
+//     transition: 0.3s ease-in-out;
+
+//     &.active {
+//       background: #00d4ff;
+//       color: #0a0f1a;
+//     }
+//   }
+// }
+
+// .input-group {
+//   display: flex;
+//   align-items: center;
+//   background: #2a3a4d;
+//   padding: 12px;
+//   margin: 10px 0;
+//   border-radius: 8px;
+//   position: relative;
+
+//   input {
+//     width: 100%;
+//     border: none;
+//     background: transparent;
+//     color: #fff;
+//     font-size: 1rem;
+//     padding: 5px 10px;
+//     outline: none;
+//   }
+
+//   i {
+//     position: absolute;
+//     right: 10px;
+//     color: #00d4ff;
+//     cursor: pointer;
+//   }
+// }
+
+// .forgot-password {
+//   display: block;
+//   color: #00d4ff;
+//   margin: 10px 0;
+//   cursor: pointer;
+//   text-decoration: underline;
+// }
+
+// button {
+//   width: 100%;
+//   padding: 12px;
+//   background: #00d4ff;
+//   color: #0a0f1a;
+//   font-size: 1rem;
+//   border: none;
+//   border-radius: 8px;
+//   cursor: pointer;
+//   transition: 0.3s;
+
+//   &:hover {
+//     background: #00b3e6;
+//   }
+
+//   &:disabled {
+//     background: #444;
+//     cursor: not-allowed;
+//   }
+// }
+
+// .signup-link {
+//   color: #bbb;
+//   margin-top: 15px;
+
+//   a {
+//     color: #00d4ff;
+//     text-decoration: underline;
+//   }
+// }
+
+.signin-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 97vh;
+  background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+}
+
+.signin-container {
+  width: 100%;
+  max-width: 400px;
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+.signin-card h2 {
+  color: #007bff;
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+}
+
+.signin-card h1 {
+  color: #333;
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+.role-toggle {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+
+  button {
+    flex: 1;
+    padding: 10px;
+    font-size: 1rem;
+    cursor: pointer;
+    border: none;
+    background: #ddd;
+    color: #333;
+    margin: 0 5px;
+    border-radius: 5px;
+    transition: 0.3s ease-in-out;
+
+    &.active {
+      background: #007bff;
+      color: #fff;
+    }
+  }
+}
+
+.alert {
+  padding: 10px;
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 10px;
+
+  &.error {
+    color:#e74c3c; 
+  }
+
+  &.success {
+    color:  #2ecc71;
+  }
+}
+
+
+.input-group {
+  display: flex;
+  align-items: center;
+  background: #f0f0f0;
+  padding: 12px;
+  margin: 10px 0;
+  border-radius: 8px;
+  position: relative;
+
+  input {
+    width: 100%;
+    border: none;
+    background: transparent;
+    color: #333;
+    font-size: 1rem;
+    padding: 5px 10px;
+    outline: none;
+  }
+
+  i {
+    position: absolute;
+    right: 10px;
+    color: #007bff;
+    cursor: pointer;
+  }
+}
+
+.forgot-password {
+  display: block;
+  color: #007bff;
+  margin: 10px 0;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  background: #007bff;
+  color: #fff;
+  font-size: 1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+
+  &:hover {
+    background: #0056b3;
+  }
+
+  &:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+  }
+}
+
+.signup-link {
+  color: #666;
+  margin-top: 15px;
+
+  a {
+    color: #007bff;
+    text-decoration: underline;
+  }
+}
+
+// Responsive Styles
+@media (max-width: 500px) {
+  .signin-container {
+    padding: 20px;
+  }
+
+  .role-toggle button {
+    font-size: 14px;
+  }
+}
+

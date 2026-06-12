@@ -1,0 +1,64 @@
+<div class="admin-dashboard">
+ 
+  <div *ngIf="notification" 
+       [ngClass]="{
+         'notification': true, 
+         'success': notification.type === 'success', 
+         'error': notification.type === 'error'
+       }">
+    {{ notification.message }}
+  </div>
+
+  <div class="admin-container">
+    <h2>Pending Charging Stations</h2>
+    <div class="station-list" *ngIf="pendingStations.length > 0">
+      <div class="station-card" *ngFor="let station of pendingStations">
+        <div class="station-info">
+          <h3>{{ station.stationName }}</h3>
+          <p>{{ station.address }}</p>
+          <p *ngIf="station.email"><strong>Email:</strong> {{ station.email }}</p>
+          
+         
+          <div class="station-image">
+            <img *ngIf="station.imageBase64" 
+                 [src]="sanitizeImage(station.imageBase64)" 
+                 alt="Station Image"
+                 (error)="handleImageError($event)" />
+            <p *ngIf="!station.imageBase64" class="no-image">No image available</p>
+          </div>
+        </div>
+        <div class="action-buttons">
+          <button class="approve-btn" (click)="approveStation(station)">Approve</button>
+          <button class="reject-btn" (click)="rejectStation(station)">Reject</button>
+        </div>
+      </div>
+    </div>
+    <p class="no-stations" *ngIf="pendingStations.length === 0">No pending stations.</p>
+  </div>
+
+  <div class="news-admin-container">
+    <h2>Manage EV News</h2>
+    <form (ngSubmit)="addNews()">
+      <input 
+        type="text" 
+        [(ngModel)]="newsTitle" 
+        name="newsTitle" 
+        placeholder="News Title" 
+        required 
+      />
+      <textarea 
+        [(ngModel)]="newsContent" 
+        name="newsContent" 
+        placeholder="News Content" 
+        required
+      ></textarea>
+      <input 
+        type="text" 
+        [(ngModel)]="newsImageUrl" 
+        name="newsImageUrl" 
+        placeholder="Image URL (optional)" 
+      />
+      <button type="submit" [disabled]="!isNewsFormValid()">Add News</button>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,215 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+
+$primary-color: #3498db;
+$secondary-color: #2ecc71;
+$background-color: #f4f6f7;
+$text-color: #2c3e50;
+$input-border-color: #bdc3c7;
+$card-shadow: rgba(0, 0, 0, 0.1);
+
+
+$mobile: 576px;
+$tablet: 768px;
+$desktop: 992px;
+$large-desktop: 1200px;
+
+
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@mixin input-focus {
+  border-color: $primary-color;
+  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+  outline: none;
+}
+
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: $background-color;
+  color: $text-color;
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
+}
+
+.contact-container {
+  @include flex-center;
+  min-height: 100vh;
+  padding: 20px;
+  background-color: $background-color;
+
+  .contact-card {
+    display: flex;
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px $card-shadow;
+    max-width: 1100px;
+    width: 100%;
+    overflow: hidden;
+
+    
+    .contact-info {
+      flex: 0 0 40%;
+      background-color: $primary-color;
+      color: white;
+      padding: 40px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+
+      .contact-image {
+        width: 100%;
+        max-height: 250px;
+        object-fit: contain;
+        margin-bottom: 30px;
+        border-radius: 10px;
+      }
+
+      .info-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+
+        i {
+          margin-right: 15px;
+          font-size: 1.5rem;
+          width: 30px;
+          text-align: center;
+        }
+
+        span {
+          font-weight: 300;
+        }
+      }
+    }
+
+    
+    .contact-form {
+      flex: 0 0 60%;
+      padding: 40px;
+
+      h3 {
+        color: $primary-color;
+        margin-bottom: 10px;
+        font-size: 2rem;
+        font-weight: 600;
+      }
+
+      p {
+        color: lighten($text-color, 20%);
+        margin-bottom: 30px;
+      }
+
+      .input-group {
+        margin-bottom: 20px;
+
+        .input-field {
+          // width: 100%;
+          width: calc(100% - 190px);
+          padding: 12px 15px;
+          border: 1px solid $input-border-color;
+          border-radius: 8px;
+          transition: all 0.3s ease;
+          font-family: 'Poppins', sans-serif;
+
+          &:focus {
+            @include input-focus;
+          }
+
+          &.textarea {
+            min-height: 150px;
+            resize: vertical;
+          }
+        }
+      }
+
+      .submit-btn {
+        // width: 100%;
+        width: calc(100% - 160px);
+        padding: 12px;
+        background-color: $secondary-color;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+
+        &:hover {
+          background-color: darken($secondary-color, 10%);
+          transform: translateY(-2px);
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        &:focus {
+          outline: none;
+          @include input-focus;
+        }
+      }
+    }
+  }
+
+  
+  @media screen and (max-width: $desktop) {
+    .contact-card {
+      flex-direction: column;
+
+      .contact-info,
+      .contact-form {
+        flex: 0 0 100%;
+        padding: 30px;
+      }
+
+      .contact-image {
+        max-height: 200px;
+      }
+    }
+  }
+
+  @media screen and (max-width: $mobile) {
+    padding: 10px;
+
+    .contact-card {
+      .contact-info,
+      .contact-form {
+        padding: 20px;
+
+        h3 {
+          font-size: 1.5rem;
+        }
+
+        .input-group .input-field {
+          padding: 10px;
+        }
+      }
+    }
+  }
+}
+
+
+input, textarea, button {
+  &:focus {
+    outline: 2px solid $primary-color;
+    outline-offset: 2px;
+  }
+}
+
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: lighten($background-color, 3%);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: $primary-color;
+  border-radius: 4px;
+}

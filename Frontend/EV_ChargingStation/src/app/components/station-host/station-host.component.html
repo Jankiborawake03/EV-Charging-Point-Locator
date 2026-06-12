@@ -1,0 +1,118 @@
+<div class="station-host-container">
+  <h2>Register Your Charging Station</h2>
+
+  <div class="content-wrapper">
+   
+    <div *ngIf="successMessage" class="success-message">
+      {{ successMessage }}
+    </div>
+
+   
+    <div class="form-container">
+      <form [formGroup]="stationForm" (ngSubmit)="submitStation()">
+        
+        <div class="input-group">
+          <label for="stationName">Station Name</label>
+          <input type="text" id="stationName" name="stationName" formControlName="name" required />
+          <small *ngIf="stationForm.get('name')?.invalid && stationForm.get('name')?.touched" class="error">Required!</small>
+        </div>
+
+        <div class="input-group">
+          <label for="stationEmail">Email</label>
+          <input type="email" id="stationEmail" name="stationEmail" formControlName="email" readonly />
+          <small *ngIf="stationForm.get('email')?.invalid && stationForm.get('email')?.touched" class="error">Invalid email format!</small>
+        </div>
+
+        <div class="input-group">
+          <label for="stationAddress">Address</label>
+          <input type="text" id="stationAddress" name="stationAddress" formControlName="address" required />
+          <small *ngIf="stationForm.get('address')?.invalid && stationForm.get('address')?.touched" class="error">Required!</small>
+        </div>
+
+        <div class="input-group">
+          <label for="pinCode">Pin Code</label>
+          <input type="text" id="pinCode" name="pinCode" formControlName="pinCode" required />
+          <small *ngIf="stationForm.get('pinCode')?.invalid && stationForm.get('pinCode')?.touched" class="error">Enter a valid 6-digit pin code!</small>
+        </div>
+
+        <!-- New Vehicle Type Section -->
+        <div class="input-group checkbox-group">
+          <label>Vehicle Types</label>
+          <div class="checkbox-container">
+            <div class="checkbox-item">
+              <input type="checkbox" id="carType" formControlName="car" />
+              <label for="carType">Car</label>
+            </div>
+            <div class="checkbox-item">
+              <input type="checkbox" id="bikeType" formControlName="bike" />
+              <label for="bikeType">Bike</label>
+            </div>
+          </div>
+          <small *ngIf="!isAnyVehicleTypeSelected() && stationForm.get('car')?.touched" class="error">
+            Select at least one vehicle type!
+          </small>
+        </div>
+
+        <!-- New Charger Type Section -->
+        <div class="input-group">
+          <label>Charger Types</label>
+          <div class="checkbox-container">
+            <div class="checkbox-item">
+              <input type="checkbox" id="type1" formControlName="type1" />
+              <label for="type1">Type 1 (J1772)</label>
+            </div>
+            <div class="checkbox-item">
+              <input type="checkbox" id="type2" formControlName="type2" />
+              <label for="type2">Type 2 (Mennekes)</label>
+            </div>
+            <div class="checkbox-item">
+              <input type="checkbox" id="chademo" formControlName="chademo" />
+              <label for="chademo">CHAdeMO</label>
+            </div>
+            <div class="checkbox-item">
+              <input type="checkbox" id="ccs1" formControlName="ccs1" />
+              <label for="ccs1">CCS1</label>
+            </div>
+            <div class="checkbox-item">
+              <input type="checkbox" id="ccs2" formControlName="ccs2" />
+              <label for="ccs2">CCS2</label>
+            </div>
+            <div class="checkbox-item">
+              <input type="checkbox" id="tesla" formControlName="tesla" />
+              <label for="tesla">Tesla</label>
+            </div>
+          </div>
+          <small *ngIf="!isAnyChargerTypeSelected() && stationForm.get('type1')?.touched" class="error">
+            Select at least one charger type!
+          </small>
+        </div>
+        
+        <div class="input-group">
+          <label for="latitude">Latitude</label>
+          <input type="text" id="latitude" name="latitude" formControlName="latitude" readonly />
+        </div>
+
+        <div class="input-group">
+          <label for="longitude">Longitude</label>
+          <input type="text" id="longitude" name="longitude" formControlName="longitude" readonly />
+        </div>
+
+        
+        <div class="file-upload">
+          <label for="stationPhoto">Upload Station Photo:</label>
+          <input type="file" id="stationPhoto" name="stationPhoto" (change)="onFileSelected($event)" accept="image/png, image/jpeg" required />
+          <div *ngIf="filePreview">
+            <img [src]="filePreview" alt="Preview" width="150">
+          </div>
+        </div>
+
+        <button type="submit" [disabled]="stationForm.invalid || !selectedFile || !isAnyVehicleTypeSelected() || !isAnyChargerTypeSelected()">Submit for Approval</button>
+      </form>
+    </div>
+
+    
+    <div class="map-container">
+      <div id="map"></div>
+    </div>
+  </div>
+</div>

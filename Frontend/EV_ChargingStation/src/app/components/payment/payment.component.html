@@ -1,0 +1,34 @@
+<div class="payment-container">
+    <div class="payment-header">
+      <h1>Choose Your Plan</h1>
+      <p>Complete your purchase securely with Stripe</p>
+    </div>
+  
+    <div class="payment-options">
+      <div class="plan-card" *ngFor="let item of paymentItems">
+        <div class="plan-header">
+          <h2>{{ item.name }}</h2>
+        </div>
+        <div class="plan-details">
+          <p class="price">${{ item.price.toFixed(2) }}</p>
+          <p class="description">{{ item.description }}</p>
+        </div>
+        <button 
+          class="checkout-button" 
+          (click)="initiateCheckout()"
+          [disabled]="isProcessing"
+        >
+          {{ isProcessing ? 'Processing...' : 'Proceed to Checkout' }}
+        </button>
+      </div>
+    </div>
+  
+    <div class="payment-security">
+      <p>🔒 Secure Stripe Checkout</p>
+      <div class="payment-icons">
+        <img src="/assets/visa-icon.svg" alt="Visa">
+        <img src="/assets/mastercard-icon.svg" alt="Mastercard">
+        <img src="/assets/amex-icon.svg" alt="American Express">
+      </div>
+    </div>
+  </div>

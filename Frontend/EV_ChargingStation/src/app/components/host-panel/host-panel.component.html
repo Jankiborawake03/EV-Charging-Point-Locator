@@ -1,0 +1,420 @@
+<div class="host-dashboard-container">
+  <!-- Loading Indicator -->
+  <div class="loading-overlay" *ngIf="isLoading">
+    <div class="spinner"></div>
+    <p>Loading...</p>
+  </div>
+  
+  <!-- Status Messages -->
+  <div class="status-messages">
+    <div class="error-message" *ngIf="errorMessage">
+      <i class="fas fa-exclamation-circle"></i> {{ errorMessage }}
+      <button class="close-btn" (click)="errorMessage = ''">×</button>
+    </div>
+    <div class="success-message" *ngIf="successMessage">
+      <i class="fas fa-check-circle"></i> {{ successMessage }}
+      <button class="close-btn" (click)="successMessage = ''">×</button>
+    </div>
+  </div>
+
+  <div class="dashboard-content">
+    <aside class="sidebar">
+      <ul>
+        <li [ngClass]="{'active': activeTab === 'dashboard'}" (click)="setActiveTab('dashboard')">
+          <i class="fas fa-home"></i>
+          <span>Dashboard</span>
+        </li>
+        <li [ngClass]="{'active': activeTab === 'stations'}" (click)="setActiveTab('stations')">
+          <i class="fas fa-charging-station"></i>
+          <span>My Stations</span>
+        </li>
+        <!-- <li [ngClass]="{'active': activeTab === 'bookings'}" (click)="setActiveTab('bookings')">
+          <i class="fas fa-book"></i>
+          <span>Bookings</span>
+        </li> -->
+        <li [ngClass]="{'active': activeTab === 'notifications'}" (click)="setActiveTab('notifications')">
+          <i class="fas fa-bell"></i>
+          <span>Bookings</span>
+          <span class="notification-badge" *ngIf="unreadNotificationsCount > 0">
+           ( {{ unreadNotificationsCount }})
+          </span>
+        </li>
+        <li [ngClass]="{'active': activeTab === 'settings'}" (click)="setActiveTab('settings')">
+          <i class="fas fa-cog"></i>
+          <span>Settings</span>
+        </li>
+        <button (click)="logout()" class="logout-btn">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+      </ul>
+    </aside>
+
+    <main class="main-content">
+      <!-- Profile Section -->
+      <section class="profile-section" *ngIf="activeTab === 'dashboard'">
+        <div class="profile-card">
+          <div class="profile-pic-container">
+            <div class="profile-pic">
+              <img 
+                [src]="hostDetails?.profilePhoto ? 
+                  'data:image/jpeg;base64,' + hostDetails.profilePhoto : 
+                  '/assets/default-profile.webp'" 
+                alt="Profile Picture" 
+                class="profile-image"
+              />
+              <label for="file-input" class="edit-profile-photo">
+                <div class="edit-overlay">
+                  <i class="fas fa-camera"></i>
+                  <span>Edit</span>
+                </div>
+              </label>
+              <input 
+                id="file-input" 
+                type="file" 
+                (change)="onFileSelected($event)" 
+                accept="image/jpeg,image/png,image/gif,image/webp" 
+                hidden 
+              />
+            </div>
+          </div>
+          
+          <div class="profile-info">
+            <h2>{{ hostDetails?.firstName }} {{ hostDetails?.lastName }}</h2>
+            <p class="email">
+              <i class="fas fa-envelope"></i> 
+              {{ hostDetails?.email }}
+            </p>
+            <p class="phone">
+              <i class="fas fa-phone"></i> 
+              {{ hostDetails?.contactNumber || 'Not provided' }}
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Dashboard View -->
+      <div *ngIf="activeTab === 'dashboard'">
+        <!-- Stations Overview -->
+        <section class="stations-overview">
+          <div class="section-header">
+            <h3>My Charging Stations</h3>
+            <button 
+              *ngIf="!hasRegisteredStation" 
+              class="add-station-btn" 
+              (click)="navigateToStationHost()">
+              <i class="fas fa-plus"></i> Add New Station
+            </button>
+            <div *ngIf="hasRegisteredStation" class="station-registered-message">
+              Station Already Registered
+            </div>
+          </div>
+
+          <div *ngIf="stations.length === 0" class="no-stations-message">
+            <i class="fas fa-info-circle"></i>
+            <p>You don't have any charging stations yet. Click "Add New Station" to get started.</p>
+          </div>
+
+          <div class="stations-grid">
+            <div *ngFor="let station of stations" class="station-card">
+              <div class="station-header">
+                <h4>{{ station.stationName }}</h4>
+                <span class="station-status" 
+                      [ngClass]="{
+                        'active': station.active,
+                        'inactive': !station.active
+                      }">
+                  <i class="fas" [ngClass]="{'fa-check-circle': station.active, 'fa-times-circle': !station.active}"></i>
+                  {{ station.active ? 'Active' : 'Inactive' }}
+                </span>
+              </div>
+              <div class="station-details">
+                <p><i class="fas fa-map-marker-alt"></i> {{ station.address }}</p>
+                <p><i class="fas fa-plug"></i> {{ station.chargerType }}</p>
+                <p><i class="fas fa-charging-station"></i> {{ station.ports }} Available</p>
+              </div>
+              <div class="station-actions">
+                <button 
+                  class="toggle-status-btn" 
+                  [ngClass]="{'activate-btn': !station.active, 'deactivate-btn': station.active}"
+                  (click)="toggleStationStatus(station.id)">
+                  <i class="fas" [ngClass]="{'fa-power-off': !station.active, 'fa-ban': station.active}"></i>
+                  {{ station.active ? 'Deactivate' : 'Activate' }}
+                </button>
+                <button class="manage-btn" (click)="manageStation(station.id)">
+                  <i class="fas fa-cogs"></i> Manage
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Recent Bookings -->
+        <section class="bookings-section">
+          <div class="section-header">
+            <h3>Recent Bookings</h3>
+            <button class="view-all-btn" (click)="setActiveTab('bookings')">View All Bookings</button>
+          </div>
+
+          <div *ngIf="recentBookings.length === 0" class="no-bookings-message">
+            <i class="fas fa-info-circle"></i>
+            <p>You don't have any bookings yet.</p>
+          </div>
+
+          <div class="bookings-table" *ngIf="recentBookings.length > 0">
+            <table>
+              <thead>
+                <tr>
+                  <th>User</th>
+                  <th>Station</th>
+                  <th>Date</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let booking of recentBookings">
+                  <td>{{ booking.userName }}</td>
+                  <td>{{ booking.stationName }}</td>
+                  <td>{{ booking.bookingDate | date:'mediumDate' }}</td>
+                  <td>
+                    <span class="booking-status" 
+                          [ngClass]="{
+                            'confirmed': booking.status === 'CONFIRMED',
+                            'pending': booking.status === 'PENDING',
+                            'in-progress': booking.status === 'IN_PROGRESS',
+                            'completed': booking.status === 'COMPLETED',
+                            'cancelled': booking.status === 'CANCELLED'
+                          }">
+                      {{ booking.status }}
+                    </span>
+                  </td>
+                  <td>
+                    <button *ngIf="booking.status === 'IN_PROGRESS'" 
+                            class="action-btn complete-btn" 
+                            (click)="completeCharging(booking.id)">
+                      <i class="fas fa-check"></i> Complete
+                    </button>
+                    <button *ngIf="booking.status !== 'IN_PROGRESS'" 
+                            class="action-btn details-btn" 
+                            (click)="viewBookingDetails(booking.id)">
+                      <i class="fas fa-info-circle"></i> Details
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+
+      <!-- Stations Tab View -->
+      <section class="full-stations-section" *ngIf="activeTab === 'stations'">
+        <div class="section-header">
+          <h3>Manage Your Charging Stations</h3>
+          <button 
+            *ngIf="!hasRegisteredStation" 
+            class="add-station-btn" 
+            (click)="navigateToStationHost()">
+            <i class="fas fa-plus"></i> Add New Station
+          </button>
+        </div>
+
+        <div *ngIf="stations.length === 0" class="no-stations-message">
+          <i class="fas fa-info-circle"></i>
+          <p>You don't have any charging stations yet. Click "Add New Station" to get started.</p>
+        </div>
+
+        <div class="stations-grid">
+          <div *ngFor="let station of stations" class="station-card">
+            <div class="station-header">
+              <h4>{{ station.stationName }}</h4>
+              <span class="station-status" 
+                    [ngClass]="{
+                      'active': station.active,
+                      'inactive': !station.active
+                    }">
+                <i class="fas" [ngClass]="{'fa-check-circle': station.active, 'fa-times-circle': !station.active}"></i>
+                {{ station.active ? 'Active' : 'Inactive' }}
+              </span>
+            </div>
+            <div class="station-details">
+              <p><i class="fas fa-map-marker-alt"></i> {{ station.address }}</p>
+              <p><i class="fas fa-plug"></i> {{ station.chargerType }}</p>
+              <p><i class="fas fa-charging-station"></i> {{ station.ports }} Available</p>
+              <p><i class="fas fa-money-bill"></i> Fee: ₹{{ station.fee || 150 }}</p>
+            </div>
+            <div class="station-actions">
+              <button 
+                class="toggle-status-btn" 
+                [ngClass]="{'activate-btn': !station.active, 'deactivate-btn': station.active}"
+                (click)="toggleStationStatus(station.id)">
+                <i class="fas" [ngClass]="{'fa-power-off': !station.active, 'fa-ban': station.active}"></i>
+                {{ station.active ? 'Deactivate' : 'Activate' }}
+              </button>
+              <button class="edit-btn" (click)="editStation(station.id)">
+                <i class="fas fa-edit"></i> Edit Details
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+     
+    <!-- Bookings Tab -->
+    <div *ngIf="activeTab === 'bookings'" class="bookings-tab">
+      <h2>Booking Management</h2>
+      
+      <div class="filter-bar">
+        <label for="status-filter">Filter by Status:</label>
+        <select id="status-filter" [(ngModel)]="statusFilter" (change)="filterBookings()">
+          <option value="all">All Bookings</option>
+          <option value="pending">Pending</option>
+          <option value="active">Active</option>
+          <option value="completed">Completed</option>
+          <option value="cancelled">Cancelled</option>
+        </select>
+      </div>
+
+      <div *ngIf="filteredBookings.length === 0" class="no-data-message">
+        <p>No bookings found matching the selected filter.</p>
+      </div>
+
+      <div *ngIf="filteredBookings.length > 0">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Booking ID</th>
+              <th>User</th>
+              <th>Station</th>
+              <th>Booking Date</th>
+              <th>Status</th>
+              <th>Amount</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let booking of filteredBookings">
+              <td>{{ booking.id }}</td>
+              <td>{{ booking.userEmail }}</td>
+              <td>{{ booking.stationName }}</td>
+              <td>{{ booking.bookingDate | date:'medium' }}</td>
+              <td>
+                <span [class.status-active]="booking.status === 'active'" 
+                      [class.status-pending]="booking.status === 'pending'"
+                      [class.status-completed]="booking.status === 'completed'"
+                      [class.status-cancelled]="booking.status === 'cancelled'">
+                  {{ booking.status }}
+                </span>
+              </td>
+              <td>{{ booking.amount ? '$' + booking.amount.toFixed(2) : 'N/A' }}</td>
+              <td>
+                <button *ngIf="booking.status === 'active'" class="action-btn complete-btn" (click)="completeCharging(booking.id)">Complete</button>
+                <button class="action-btn" (click)="viewBookingDetails(booking.id)">View</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Notifications Tab -->
+<div *ngIf="activeTab === 'notifications'" class="notifications-tab">
+  <app-host-notifications></app-host-notifications>
+</div>
+
+        <div *ngIf="activeTab === 'profile'" class="profile-tab">
+      <h2>My Profile</h2>
+      
+      <div class="profile-edit-form">
+        <div class="form-group">
+          <label for="profile-photo">Profile Photo</label>
+          <div class="profile-photo-upload">
+            <img [src]="'data:image/jpeg;base64,' + hostDetails.profilePhoto" *ngIf="hostDetails.profilePhoto" alt="Profile Photo">
+            <img src="/assets/default-profile.png" *ngIf="!hostDetails.profilePhoto" alt="Default Profile">
+            <input type="file" id="profile-photo" (change)="onFileSelected($event)" accept="image/*">
+            <button class="upload-btn">Change Photo</button>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="firstName">First Name</label>
+          <input type="text" id="firstName" [(ngModel)]="hostDetails.firstName" name="firstName">
+        </div>
+        
+        <div class="form-group">
+          <label for="lastName">Last Name</label>
+          <input type="text" id="lastName" [(ngModel)]="hostDetails.lastName" name="lastName">
+        </div>
+        
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" [value]="hostDetails.email" disabled>
+        </div>
+        
+        <div class="form-group">
+          <label for="contactNumber">Contact Number</label>
+          <input type="tel" id="contactNumber" [(ngModel)]="hostDetails.contactNumber" name="contactNumber">
+        </div>
+        
+        <button class="primary-btn save-btn" (click)="updateProfile()">Save Changes</button>
+      </div>
+    </div>
+
+  
+
+  
+  <div *ngIf="showBookingDetails" class="modal-backdrop">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h3>Booking Details</h3>
+        <button class="close-btn" (click)="closeBookingDetails()">×</button>
+      </div>
+      <div class="modal-body" *ngIf="selectedBooking">
+        <div class="detail-row">
+          <span class="detail-label">Booking ID:</span>
+          <span class="detail-value">{{ selectedBooking.id }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">User Email:</span>
+          <span class="detail-value">{{ selectedBooking.userEmail }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Station Name:</span>
+          <span class="detail-value">{{ selectedBooking.stationName }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Status:</span>
+          <span class="detail-value" [class.status-active]="selectedBooking.status === 'active'" 
+                [class.status-pending]="selectedBooking.status === 'pending'"
+                [class.status-completed]="selectedBooking.status === 'completed'"
+                [class.status-cancelled]="selectedBooking.status === 'cancelled'">
+            {{ selectedBooking.status }}
+          </span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Booking Date:</span>
+          <span class="detail-value">{{ selectedBooking.bookingDate | date:'medium' }}</span>
+        </div>
+        <div class="detail-row" *ngIf="selectedBooking.chargingStartTime">
+          <span class="detail-label">Charging Started:</span>
+          <span class="detail-value">{{ selectedBooking.chargingStartTime | date:'medium' }}</span>
+        </div>
+        <div class="detail-row" *ngIf="selectedBooking.chargingEndTime">
+          <span class="detail-label">Charging Ended:</span>
+          <span class="detail-value">{{ selectedBooking.chargingEndTime | date:'medium' }}</span>
+        </div>
+        <div class="detail-row" *ngIf="selectedBooking.amount">
+          <span class="detail-label">Amount:</span>
+          <span class="detail-value">${{ selectedBooking.amount.toFixed(2) }}</span>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button *ngIf="selectedBooking && selectedBooking.status === 'active'" 
+                class="primary-btn" 
+                (click)="completeCharging(selectedBooking.id)">
+          Complete Charging
+        </button>
+        <button class="secondary-btn" (click)="closeBookingDetails()">Close</button>
+      </div>
+    </div>
+  </div>
